@@ -1,4 +1,4 @@
-import getListStudentIds from "./1-get_list_student_ids";
+import getListStudentIds from './1-get_list_student_ids';
 
 /**
  * a function that returns the sum of all the student ids.
