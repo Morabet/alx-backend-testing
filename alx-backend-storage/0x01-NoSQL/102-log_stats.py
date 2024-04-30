@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Task 12"""
+""" Task 102"""
 
 from pymongo import MongoClient
 
@@ -19,6 +19,17 @@ def print_nginx_request_logs(nginx_collection):
         nginx_collection.find({'method': 'GET', 'path': '/status'})
     ))
     print("{} status check".format(status_checks_count))
+    print("IPs:")
+    ips = nginx_collection.aggregate([
+        {"$group": {
+            "_id": "$ip",
+            "count": {"$sum": 1}
+        }},
+        {"$sort": {"count": -1}},
+        {"$limit": 10}
+    ])
+    for ip in ips:
+        print("\t{}: {}".format(ip.get("_id"), ip.get("count")))
 
 
 def run():
