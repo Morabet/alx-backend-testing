@@ -20,15 +20,18 @@ class Config:
 def get_locale() -> str:
     """ Retrieves the locale for a web page"""
     # 1. Locale from URL parameters
-    if 'locale' in request.args and request.args['locale'] in Config.LANGUAGES:
-        return request.args['locale']
-    # 2. Locale from user settings (assuming it's stored in the user object)
-    if g.user and g.user['locale'] in Config.LANGUAGES:
-        return g.user['locale']
+    locale = request.args.get('locale')
+    if locale in app.config['LANGUAGES']:
+        return locale
+    # # 2. Locale from user settings (assuming it's stored in the user object)
+    if g.user:
+        locale = g.user.get('locale')
+        if locale and locale in app.config['LANGUAGES']:
+            return locale
     # 3. Locale from request header
-    if request.headers.get('Accept-Language', None) and \
-            request.headers.get('Accept-Language', None) in Config.LANGUAGES:
-        return request.headers.get('Accept-Language')
+    locale = request.headers.get('locale', None)
+    if locale in app.config['LANGUAGES']:
+        return locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
