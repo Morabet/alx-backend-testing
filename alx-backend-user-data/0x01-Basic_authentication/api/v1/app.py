@@ -34,13 +34,25 @@ def not_found(error) -> str:
     return jsonify({"error": "Not found"}), 404
 
 
+@app.errorhandler(401)
+def unauthorized_error_handler(error):
+    """ Custom error handler for 401 Unauthorized """
+    return jsonify({"error": "Unauthorized"}), 401
+
+
+@app.errorhandler(403)
+def forbidden_error_handler(error):
+    """ Custom error handler for 403 Forbidden """
+    return jsonify({"error": "Forbidden"}), 403
+
+
 @app.before_request
 def before_request_func():
     """ Authenticates a user before processing a request"""
     path = request.path
     excluded_paths = ['/api/v1/status/',
                       '/api/v1/unauthorized/', '/api/v1/forbidden/']
-    if auth is None or path not in excluded_paths:
+    if auth:
         if auth.require_auth(path, excluded_paths):
             if auth.authorization_header(request) is None:
                 abort(401)

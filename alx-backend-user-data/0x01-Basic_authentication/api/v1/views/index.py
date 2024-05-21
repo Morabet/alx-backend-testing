@@ -26,25 +26,13 @@ def stats() -> str:
     return jsonify(stats)
 
 
-@app_views.route('/unauthorized', methods=['GET'])
+@app_views.route('/unauthorized', methods=['GET'], strict_slashes=False)
 def unauthorized_route():
     """ Example route that triggers a 401 error """
     abort(401)
 
 
-@app_views.errorhandler(401)
-def unauthorized_error_handler(error):
-    """ Custom error handler for 401 Unauthorized """
-    return jsonify({"error": "Unauthorized"}), 401
-
-
-@app_views.route('/forbidden', methods=['GET'])
+@app_views.route('/forbidden', methods=['GET'], strict_slashes=False)
 def forbidden_route():
     """ Example route that triggers a 403 error """
     abort(403)
-
-
-@app_views.errorhandler(403)
-def forbidden_error_handler(error):
-    """ Custom error handler for 403 Forbidden """
-    return jsonify({"error": "Forbidden"}), 403
