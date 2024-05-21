@@ -36,7 +36,7 @@ def not_found(error) -> str:
 
 @app.before_request
 def before_request_func():
-    """ """
+    """ Authenticates a user before processing a request"""
     path = request.path
     excluded_paths = ['/api/v1/status/',
                       '/api/v1/unauthorized/', '/api/v1/forbidden/']
