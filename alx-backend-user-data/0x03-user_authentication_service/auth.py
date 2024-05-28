@@ -29,19 +29,19 @@ class Auth:
 
     def register_user(self, email: str, password: str) -> User:
         """ Register user if Not exist"""
-        if self._db.find_user_by(email=email):
-            raise ValueError(f"User {email} already exists")
-        password = _hash_password(password)
-        user = self._db.add_user(email=email, hashed_password=password)
-        return user
+        try:
+            self._db.find_user_by(email=email)
+        except NoResultFound:
+            return self._db.add_user(email, _hash_password(password))
+        raise ValueError(f"User {email} already exists")
 
     def valid_login(self, email: str, password: str) -> bool:
         """ Credentials validation"""
-        user = self._db.find_user_by(email=email)
-        if user:
-            if bcrypt.checkpw(password.encode(), user.hashed_password):
-                return True
-        return False
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            return False
+        return bcrypt.checkpw(password.encode(), user.hashed_password)
 
     def create_session(self, email: str) -> str:
         """ Get session ID"""
@@ -54,11 +54,13 @@ class Auth:
 
     def get_user_from_session_id(self, session_id: str) -> Union[User, None]:
         """ Find user by session IDw"""
-        if session_id:
+        if session_id is None:
+            return None
+        try:
             user = self._db.find_user_by(session_id=session_id)
-            if user:
-                return user
-        return None
+        except NoResultFound:
+            return None
+        return user
 
     def destroy_session(self, user_id: int) -> None:
         """ Destroy session"""
