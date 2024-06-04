@@ -1,10 +1,11 @@
 const http = require('http');
 const fs = require('fs').promises;
-/**
- *
- */
 const PORT = 1245;
 
+/**
+  * Counts the students in a CSV data file.
+ * @param {String} path.
+ */
 const countStudents = async (path) => {
   try {
     // Read the file asynchronously

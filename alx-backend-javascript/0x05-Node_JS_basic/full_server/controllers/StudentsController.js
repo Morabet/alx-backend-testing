@@ -1,6 +1,7 @@
 const readDatabase = require('../utils');
+
 /**
- *
+ * Contains the student-related route handlers.
  */
 
 class StudentsController {
