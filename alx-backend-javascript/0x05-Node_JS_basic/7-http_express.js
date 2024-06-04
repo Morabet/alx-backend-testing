@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs').promises;
+
 const app = express();
 const PORT = 1245;
 
@@ -54,15 +55,15 @@ app.get('/', (req, res) => {
   res.send('Hello Holberton School!');
 });
 
-app.get('/students', async (req, res) => {
-  const patch = process.argv[2];
-  try {
-    const studentList = await countStudents(patch);
-    res.send(`This is the list of our students\n${studentList}`);
-  } catch (error) {
-    res.status(500);
-    res.send('Cannot load the database');
-  }
+app.get('/students', (req, res) => {
+  res.write('This is the list of our students\n');
+  countStudents(process.argv[2])
+    .then((data) => {
+      res.end(data);
+    })
+    .catch((err) => {
+      res.end(err.message);
+    });
 });
 
 app.listen(PORT, () => {

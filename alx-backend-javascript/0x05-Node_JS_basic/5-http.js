@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs').promises;
+
 const PORT = 1245;
 
 /**
@@ -48,28 +49,24 @@ const countStudents = async (path) => {
   }
 };
 
+
 const app = http.createServer(async (req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
-
-  if (req.url === '/') {
-    res.end('Hello Holberton School!');
-    return;
-  }
-
+  if (req.url === '/') res.end('Hello Holberton School!');
   if (req.url === '/students') {
-    const path = process.argv[2];
-    try {
-      const studentList = await countStudents(path);
-      res.end(`This is the list of our students\n${studentList}`);
-    } catch (error) {
-      res.end('Cannot load the database');
-    }
-    return;
+    res.write('This is the list of our students\n');
+    countStudents(process.argv[2])
+      .then((data) => {
+        res.write(data);
+        res.end();
+      })
+      .catch((err) => {
+        res.end(err.message);
+      });
   }
-
-  res.end('Not Found');
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
