@@ -49,7 +49,6 @@ const countStudents = async (path) => {
   }
 };
 
-
 const app = http.createServer(async (req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
@@ -66,7 +65,6 @@ const app = http.createServer(async (req, res) => {
       });
   }
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
